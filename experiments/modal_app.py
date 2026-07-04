@@ -126,6 +126,25 @@ def run(smoke: bool = False, rebuild: bool = False, experiment: str = "baseline"
         print(f"PHASE: done (cv_nested {contrast}) -> {res['meta']}", flush=True)
         return res["meta"]
 
+    if experiment == "gradcam":
+        # Re-render the baseline Grad-CAM figures (Fig 5.1) with corrected axis labels
+        # (conv[-4] feature-map resolution, not raw Mel-bin index). Loads the cached
+        # baseline features (lowpass_4k/none = baseline best config), trains fold 0 inside
+        # render_cams, and writes cam_{nahuatl,spanish}_lowpass_4k_none.png.
+        from experiments import cache
+        from experiments.lid.gradcam_figure import render_cams
+        if not cache.is_cached(CACHE):
+            raise RuntimeError("feature cache missing; run baseline first to populate lid-features")
+        filenames, _ = cache.load_manifest(CACHE)
+        gc_band, gc_norm = "lowpass_4k", "none"
+        band_items = cache.load_band_items(CACHE, gc_band)
+        os.makedirs("/outputs/figures", exist_ok=True)
+        render_cams(band_items, filenames, gc_band, gc_norm, device="cuda",
+                    out_dir="/outputs/figures", n_per_class=(4 if smoke else 100), epochs=epochs)
+        out_vol.commit()
+        print(f"PHASE: done (gradcam {gc_band}/{gc_norm})", flush=True)
+        return {"experiment": "gradcam", "band": gc_band, "norm": gc_norm}
+
     if experiment in ("shuffle", "degrade"):
         if not cache.is_cached(CACHE):
             raise RuntimeError("feature cache missing; run baseline first to populate lid-features")

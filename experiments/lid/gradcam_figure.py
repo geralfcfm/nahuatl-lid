@@ -9,9 +9,22 @@ from .data import grouped_folds
 from . import train, gradcam, config
 
 def _save(cam, title, path):
-    plt.figure(); plt.imshow(cam, origin="lower", aspect="auto", cmap="jet")
-    plt.title(title); plt.colorbar(); plt.xlabel("time"); plt.ylabel("mel bin")
-    plt.tight_layout(); plt.savefig(path); plt.close()
+    # cam is the Grad-CAM at the last Conv2d block (conv[-4]) resolution, NOT the raw
+    # input spectrogram: after two 2x2 max-pools the 64 input Mel bins become H rows
+    # (~4 input Mel bins each) and the time frames become W columns. Label the axes at
+    # that downsampled conv-feature-map resolution so the index is not misread as a raw
+    # 0-63 Mel-bin index.
+    h, w = cam.shape
+    plt.figure()
+    plt.imshow(cam, origin="lower", aspect="auto", cmap="jet")
+    plt.title(title)
+    plt.colorbar()
+    plt.xlabel(f"time (conv frame, 0--{w - 1})")
+    plt.ylabel(f"Mel axis (conv row 0--{h - 1}; low $\\rightarrow$ high frequency)")
+    plt.yticks(range(0, h, max(1, h // 8)))
+    plt.tight_layout()
+    plt.savefig(path)
+    plt.close()
 
 def render_cams(items, filenames, band, norm, device, out_dir, n_per_class=100, epochs=config.EPOCHS):
     tr, va = grouped_folds(filenames, config.K_FOLDS)[0]
