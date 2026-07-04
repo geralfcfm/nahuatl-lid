@@ -145,6 +145,36 @@ def run(smoke: bool = False, rebuild: bool = False, experiment: str = "baseline"
         print(f"PHASE: done (gradcam {gc_band}/{gc_norm})", flush=True)
         return {"experiment": "gradcam", "band": gc_band, "norm": gc_norm}
 
+    if experiment == "counts":
+        # Per-contrast speaker (group) and chunk counts in the BALANCED CV pair actually
+        # used by the experiments, for the reproducibility table (and to substantiate the
+        # Guaraní/Seri variance discussion). No training.
+        from experiments import cv_data
+        from experiments.lid.data import group_id
+        res = {}
+        for c in ["es", "en", "tar", "sei", "qxp", "gn"]:
+            try:
+                cdir = None if c in cv_data.MIRROR_LANGS else f"/cv-{c}/{c}"
+                raw, _ = cv_data.build_cv_pair("/cv-ncx/ncx", c, contrast_dir=cdir)
+                nah_g, con_g, nah_n, con_n = set(), set(), 0, 0
+                for (_chunk, lbl, fn) in raw:
+                    g = group_id(fn)
+                    if lbl == 1.0:
+                        nah_g.add(g); nah_n += 1
+                    else:
+                        con_g.add(g); con_n += 1
+                res[c] = {"nahuatl_speakers": len(nah_g), "contrast_speakers": len(con_g),
+                          "nahuatl_chunks": nah_n, "contrast_chunks": con_n}
+                print(f"counts {c}: nah_spk={len(nah_g)} con_spk={len(con_g)} "
+                      f"nah_chunks={nah_n} con_chunks={con_n}", flush=True)
+            except Exception as e:  # noqa: BLE001 - report per-contrast failure, keep going
+                res[c] = {"error": str(e)}
+                print(f"counts {c}: ERROR {e}", flush=True)
+        results_mod.write_results(res, "/outputs/results_speaker_counts.json")
+        out_vol.commit()
+        print("PHASE: done (counts)", flush=True)
+        return {"experiment": "counts"}
+
     if experiment in ("shuffle", "degrade"):
         if not cache.is_cached(CACHE):
             raise RuntimeError("feature cache missing; run baseline first to populate lid-features")

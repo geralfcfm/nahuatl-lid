@@ -1,0 +1,38 @@
+{
+  "es": {
+    "nahuatl_speakers": 39,
+    "contrast_speakers": 660,
+    "nahuatl_chunks": 10234,
+    "contrast_chunks": 10234
+  },
+  "en": {
+    "nahuatl_speakers": 39,
+    "contrast_speakers": 2011,
+    "nahuatl_chunks": 10234,
+    "contrast_chunks": 10234
+  },
+  "tar": {
+    "nahuatl_speakers": 39,
+    "contrast_speakers": 17,
+    "nahuatl_chunks": 9319,
+    "contrast_chunks": 9319
+  },
+  "sei": {
+    "nahuatl_speakers": 39,
+    "contrast_speakers": 16,
+    "nahuatl_chunks": 9477,
+    "contrast_chunks": 9477
+  },
+  "qxp": {
+    "nahuatl_speakers": 39,
+    "contrast_speakers": 72,
+    "nahuatl_chunks": 10234,
+    "contrast_chunks": 10234
+  },
+  "gn": {
+    "nahuatl_speakers": 33,
+    "contrast_speakers": 2,
+    "nahuatl_chunks": 1734,
+    "contrast_chunks": 1734
+  }
+}
