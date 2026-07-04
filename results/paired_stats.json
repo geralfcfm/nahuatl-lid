@@ -1988,6 +1988,38 @@
         "k_folds": 5,
         "epochs": 15
       }
+    ],
+    "architecture_cnn_vs_crnn_seeds": [
+      {
+        "file": "results_cv_en_paired_seeds.json",
+        "seeds": [
+          42,
+          1,
+          2
+        ],
+        "crnn_seed_means_pct": [
+          96.194,
+          96.4335,
+          96.8439
+        ],
+        "cnn_seed_means_pct": [
+          96.9562,
+          96.8194,
+          96.8292
+        ],
+        "crnn_grand_mean_pct": 96.4905,
+        "crnn_seed_sd_pp": 0.3287,
+        "cnn_grand_mean_pct": 96.8683,
+        "cnn_seed_sd_pp": 0.0763,
+        "crnn_seed_range_pp": 0.65,
+        "cnn_seed_range_pp": 0.1368,
+        "paired_diff_means_pp": [
+          -0.7623,
+          -0.3859,
+          0.0147
+        ],
+        "paired_diff_mean_pp": -0.3778
+      }
     ]
   }
 }

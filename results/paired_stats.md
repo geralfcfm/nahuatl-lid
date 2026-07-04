@@ -93,6 +93,14 @@ Sign convention: wideband − lowpass (pp lost by the 4 kHz low-pass); positive 
 - 95% CI (pp) = [-2.679, +1.155], paired-t p = 0.3315, Wilcoxon p = 0.4375 (scipy exact)
 - 90% CI (pp) = [-2.234, +0.710] → TOST @±1pp: not established
 
+## (d-seeds) Seed-variance: CRNN/CNN across seeds, en wideband_16k/none, SAME data/folds
+
+- seeds: [42, 1, 2]
+- CRNN per-seed means (%): [96.194, 96.4335, 96.8439] -> grand mean 96.4905%, seed SD **0.3287 pp**, range 0.6500 pp
+- CNN  per-seed means (%): [96.9562, 96.8194, 96.8292] -> grand mean 96.8683%, seed SD **0.0763 pp**, range 0.1368 pp
+- paired diff (CRNN-CNN) per seed (pp): [-0.7623, -0.3859, 0.0147] -> mean -0.3778 pp
+- Interpretation: this seed SD is run-to-run swing from training non-determinism ALONE (data + folds held fixed); the ~0.84 pp cross-run swing additionally reflects the unpinned CV draw.
+
 ## Per-config t-based 95% CI of the mean accuracy (all configs, all files)
 
 Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.

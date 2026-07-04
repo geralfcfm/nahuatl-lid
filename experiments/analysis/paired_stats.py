@@ -23,6 +23,7 @@ from experiments.analysis.stats_util import (
     T_CRIT_95_DF4,
     mean_ci_t,
     paired_compare,
+    sample_sd,
     welch_compare,
 )
 
@@ -232,6 +233,50 @@ def build_architecture_paired() -> list[dict]:
     return [res]
 
 
+SEEDS_FILE = "results_cv_en_paired_seeds.json"
+
+
+def build_architecture_seeds() -> list[dict]:
+    """(d-seeds) Seed-variance for the paired CNN/CRNN comparison on en wideband/none.
+
+    Reads results_cv_en_paired_seeds.json (from run_paired_seeds: same folds/data,
+    N seeds). For each architecture, computes the per-seed mean accuracy (over folds)
+    and the seed-to-seed SD of that mean -- the run-to-run swing attributable to
+    training/initialisation non-determinism ALONE (data held fixed), to compare against
+    the 0.76 pp architecture effect and the ~0.84 pp cross-run swing (which additionally
+    includes the unpinned data draw). Returns [] if the file is absent.
+    """
+    path = RESULTS_DIR / SEEDS_FILE
+    if not path.exists():
+        return []
+    with open(path) as f:
+        d = json.load(f)
+    per = d["per_seed"]
+    if not per:
+        return []
+
+    def arch(key: str) -> tuple[list[float], float, float]:
+        seed_means = [sum(p[key]) / len(p[key]) * 100.0 for p in per]
+        gm = sum(seed_means) / len(seed_means)
+        return seed_means, gm, sample_sd(seed_means)
+
+    crnn_means, crnn_gm, crnn_sd = arch("crnn_folds")
+    cnn_means, cnn_gm, cnn_sd = arch("cnn_folds")
+    diffs = [cm - nm for cm, nm in zip(crnn_means, cnn_means)]
+    return [{
+        "file": SEEDS_FILE,
+        "seeds": [p["seed"] for p in per],
+        "crnn_seed_means_pct": [round(x, 4) for x in crnn_means],
+        "cnn_seed_means_pct": [round(x, 4) for x in cnn_means],
+        "crnn_grand_mean_pct": round(crnn_gm, 4), "crnn_seed_sd_pp": round(crnn_sd, 4),
+        "cnn_grand_mean_pct": round(cnn_gm, 4), "cnn_seed_sd_pp": round(cnn_sd, 4),
+        "crnn_seed_range_pp": round(max(crnn_means) - min(crnn_means), 4),
+        "cnn_seed_range_pp": round(max(cnn_means) - min(cnn_means), 4),
+        "paired_diff_means_pp": [round(x, 4) for x in diffs],
+        "paired_diff_mean_pp": round(sum(diffs) / len(diffs), 4),
+    }]
+
+
 def main() -> None:
     per_config_ci = build_per_config_ci()
     baseline = build_baseline_config_invariance()
@@ -239,6 +284,7 @@ def main() -> None:
     norm = build_norm()
     architecture = build_architecture()
     architecture_paired = build_architecture_paired()
+    architecture_seeds = build_architecture_seeds()
 
     out = {
         "meta": {
@@ -275,6 +321,7 @@ def main() -> None:
             "norm_none_minus_instance": norm,
             "architecture_cnn_vs_crnn": architecture,
             "architecture_cnn_vs_crnn_paired": architecture_paired,
+            "architecture_cnn_vs_crnn_seeds": architecture_seeds,
         },
     }
 
@@ -369,6 +416,17 @@ def write_markdown(out: dict) -> None:
             lines.append(f"- diff (CRNN − CNN) = **{r['diff_mean_pp']:+.4f} pp** (sample SD of diff {r['sample_sd_diff_pp']:.4f} pp, SE {r['se_diff_pp']:.4f} pp)")
             lines.append(f"- 95% CI (pp) = {fmt_ci(r['ci95_pp'])}, paired-t p = {r['p_ttest_two_sided']:.4f}, Wilcoxon p = {fmt_p(r['p_wilcoxon_two_sided'])} ({r['wilcoxon_method']})")
             lines.append(f"- 90% CI (pp) = {fmt_ci(r['ci90_pp'])} → TOST @±1pp: {'ESTABLISHED' if r['tost_established'] else 'not established'}")
+
+    seed_arch = out["comparisons"].get("architecture_cnn_vs_crnn_seeds", [])
+    if seed_arch:
+        lines.append("\n## (d-seeds) Seed-variance: CRNN/CNN across seeds, en wideband_16k/none, SAME data/folds\n")
+        for r in seed_arch:
+            lines.append(f"- seeds: {r['seeds']}")
+            lines.append(f"- CRNN per-seed means (%): {r['crnn_seed_means_pct']} -> grand mean {r['crnn_grand_mean_pct']:.4f}%, seed SD **{r['crnn_seed_sd_pp']:.4f} pp**, range {r['crnn_seed_range_pp']:.4f} pp")
+            lines.append(f"- CNN  per-seed means (%): {r['cnn_seed_means_pct']} -> grand mean {r['cnn_grand_mean_pct']:.4f}%, seed SD **{r['cnn_seed_sd_pp']:.4f} pp**, range {r['cnn_seed_range_pp']:.4f} pp")
+            lines.append(f"- paired diff (CRNN-CNN) per seed (pp): {r['paired_diff_means_pp']} -> mean {r['paired_diff_mean_pp']:.4f} pp")
+            lines.append("- Interpretation: this seed SD is run-to-run swing from training non-determinism ALONE "
+                         "(data + folds held fixed); the ~0.84 pp cross-run swing additionally reflects the unpinned CV draw.")
 
     lines.append("\n## Per-config t-based 95% CI of the mean accuracy (all configs, all files)\n")
     lines.append("Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.\n")

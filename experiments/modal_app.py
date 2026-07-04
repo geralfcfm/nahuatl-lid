@@ -95,6 +95,22 @@ def run(smoke: bool = False, rebuild: bool = False, experiment: str = "baseline"
         print(f"PHASE: done (cv_paired {contrast}) -> {res['meta']}", flush=True)
         return res["meta"]
 
+    if experiment == "cv_paired_seeds":
+        # Seed-variance for the paired CNN/CRNN comparison + per-epoch learning curves.
+        # Builds the CV pair + folds ONCE and trains both architectures under 3 seeds on
+        # the SAME folds, isolating training non-determinism from data-draw/fold variance.
+        from experiments import cv_data
+        contrast_dir = None if contrast in cv_data.MIRROR_LANGS else f"/cv-{contrast}/{contrast}"
+        print(f"PHASE: cv_paired_seeds pair (nahuatl vs {contrast}, dir={contrast_dir})", flush=True)
+        raw, filenames = cv_data.build_cv_pair("/cv-ncx/ncx", contrast, contrast_dir=contrast_dir)
+        res = run_matrix.run_paired_seeds(raw, filenames, "wideband_16k", "none",
+                                          seeds=[42, 1, 2], device="cuda", epochs=epochs)
+        out_path = f"/outputs/results_cv_{contrast}_paired_seeds.json"
+        results_mod.write_results(res, out_path)
+        out_vol.commit()
+        print(f"PHASE: done (cv_paired_seeds {contrast}) -> {res['meta']}", flush=True)
+        return res["meta"]
+
     if experiment in ("shuffle", "degrade"):
         if not cache.is_cached(CACHE):
             raise RuntimeError("feature cache missing; run baseline first to populate lid-features")

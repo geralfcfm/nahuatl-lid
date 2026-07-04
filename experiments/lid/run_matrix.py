@@ -116,3 +116,55 @@ def run_bandwise_paired(raw_items, filenames, configs, device="cpu", epochs=conf
     meta = {"seed": config.SEED, "k_folds": config.K_FOLDS, "epochs": epochs, "paired": True,
             "configs": [{"band": b, "norm": n} for b, n in configs]}
     return {"meta": meta, "configs": out_configs}
+
+
+def run_paired_seeds(raw_items, filenames, band, norm, seeds, device="cpu", epochs=config.EPOCHS):
+    """Seed-variance for the paired CNN/CRNN comparison on ONE (band, norm) config.
+
+    Builds the GroupKFold folds and the band features ONCE (data held fixed) and trains
+    BOTH architectures under each seed on the SAME folds, so the spread across `seeds`
+    isolates training/initialisation non-determinism from data-draw and fold variance.
+    Also captures per-epoch learning curves (train/val loss, val acc) for each arch on
+    fold 1 under the first seed, for a convergence figure.
+
+    Returns {"meta", "per_seed": [{"seed","crnn_folds","cnn_folds"}...],
+    "fold_group_ids", "curves": {"crnn":{...}, "cnn":{...}}}.
+    """
+    from experiments.preprocess import features_for_band
+    folds = grouped_folds(filenames, config.K_FOLDS)
+    groups = np.array([group_id(f) for f in filenames])
+    fold_group_ids = [sorted(set(groups[va].tolist())) for _, va in folds]
+    items = features_for_band(raw_items, band)  # fixed across seeds
+    orig_seed = config.SEED
+    per_seed = []
+    curves = None
+    try:
+        for si, s in enumerate(seeds):
+            config.SEED = s  # train_fold re-seeds to config.SEED at the start of every fold
+            crnn_fm, _, _ = _train_config(items, norm, folds, device, epochs,
+                                          label=f"{band}/{norm}/crnn/seed{s}", model_cls=CRNN_LID)
+            cnn_fm, _, _ = _train_config(items, norm, folds, device, epochs,
+                                         label=f"{band}/{norm}/cnn/seed{s}", model_cls=CNN_LID)
+            crnn_accs = [f["val_acc"] for f in crnn_fm]
+            cnn_accs = [f["val_acc"] for f in cnn_fm]
+            per_seed.append({"seed": s, "crnn_folds": crnn_accs, "cnn_folds": cnn_accs})
+            print(f"[seed {s}] crnn_mean={sum(crnn_accs)/len(crnn_accs):.4f} "
+                  f"cnn_mean={sum(cnn_accs)/len(cnn_accs):.4f}", flush=True)
+            if si == 0:  # learning curves on fold 1 (both archs), first seed only
+                tr, va = folds[0]
+                tr_items = [(items[j][0], items[j][1]) for j in tr]
+                va_items = [(items[j][0], items[j][1]) for j in va]
+                h_crnn = train.train_fold(tr_items, va_items, norm, device=device, epochs=epochs,
+                                          label="curve/crnn", model_cls=CRNN_LID)
+                h_cnn = train.train_fold(tr_items, va_items, norm, device=device, epochs=epochs,
+                                         label="curve/cnn", model_cls=CNN_LID)
+                curves = {
+                    "seed": s, "fold": 1, "epochs": epochs,
+                    "crnn": {k: h_crnn[k] for k in ("train_loss", "val_loss", "val_acc")},
+                    "cnn": {k: h_cnn[k] for k in ("train_loss", "val_loss", "val_acc")},
+                }
+    finally:
+        config.SEED = orig_seed  # never leak the override, even on error
+    meta = {"band": band, "norm": norm, "seeds": list(seeds), "k_folds": config.K_FOLDS,
+            "epochs": epochs, "orig_seed": orig_seed}
+    return {"meta": meta, "per_seed": per_seed, "fold_group_ids": fold_group_ids, "curves": curves}
