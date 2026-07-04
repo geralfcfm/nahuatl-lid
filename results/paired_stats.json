@@ -1954,6 +1954,40 @@
         "alignment_confirmed": false,
         "alignment_note": "Fold-level alignment between the two runs could NOT be confirmed from committed data (separate build_cv_pair() calls; contrast side streamed from an HF mirror with no pinned revision or persisted file manifest). Reported as unpaired Welch t-test/CI, per brief instructions for the unconfirmed-alignment case."
       }
+    ],
+    "architecture_cnn_vs_crnn_paired": [
+      {
+        "label": "CRNN - CNN, English contrast, wideband_16k/none (single paired run)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.7623,
+        "sample_sd_diff_pp": 1.5438,
+        "se_diff_pp": 0.6904,
+        "df": 4,
+        "t_stat": -1.1041,
+        "p_ttest_two_sided": 0.331505,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.4375,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -2.6792,
+          1.1546
+        ],
+        "ci90_pp": [
+          -2.2341,
+          0.7096
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_paired.json",
+        "alignment_confirmed": true,
+        "alignment_note": "Fold-level pairing IS confirmed: run_bandwise_paired computes the GroupKFold folds once and trains both architectures on those identical splits within a single run; the per-fold held-out group ids are logged in `fold_group_ids`. This supersedes the unpaired Welch estimate in (d) for the architecture comparison. NOTE: this is a fresh training run, so its CRNN/CNN accuracies are NOT identical to the separately-run results_cv_en.json / results_cv_en_cnn.json headline numbers.",
+        "crnn_mean_pct": 96.194,
+        "cnn_mean_pct": 96.9562,
+        "seed": 42,
+        "k_folds": 5,
+        "epochs": 15
+      }
     ]
   }
 }

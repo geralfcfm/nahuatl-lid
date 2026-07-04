@@ -77,6 +77,24 @@ def run(smoke: bool = False, rebuild: bool = False, experiment: str = "baseline"
         print(f"PHASE: done ({experiment} {contrast}) -> {res['meta']}", flush=True)
         return res["meta"]
 
+    if experiment == "cv_paired":
+        # Paired CNN/CRNN comparison: build the CV pair + GroupKFold folds ONCE and
+        # train BOTH architectures on those identical folds (see run_matrix.run_bandwise_paired).
+        # This does NOT read the lid-features cache -- like cv/cv_shuffle/cv_ablate, it
+        # rebuilds the CV pair from source (raw CV audio, not decode_corpus's cached Mels).
+        from experiments import cv_data
+        contrast_dir = None if contrast in cv_data.MIRROR_LANGS else f"/cv-{contrast}/{contrast}"
+        print(f"PHASE: cv_paired pair (nahuatl vs {contrast}, dir={contrast_dir})", flush=True)
+        raw, filenames = cv_data.build_cv_pair("/cv-ncx/ncx", contrast, contrast_dir=contrast_dir)
+        # Minimum required config: wideband_16k/none is the reported CNN-vs-CRNN comparison.
+        paired_configs = [("wideband_16k", "none")]
+        res = run_matrix.run_bandwise_paired(raw, filenames, paired_configs, device="cuda", epochs=epochs)
+        out_path = f"/outputs/results_cv_{contrast}_paired.json"
+        results_mod.write_results(res, out_path)
+        out_vol.commit()
+        print(f"PHASE: done (cv_paired {contrast}) -> {res['meta']}", flush=True)
+        return res["meta"]
+
     if experiment in ("shuffle", "degrade"):
         if not cache.is_cached(CACHE):
             raise RuntimeError("feature cache missing; run baseline first to populate lid-features")

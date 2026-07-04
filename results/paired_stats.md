@@ -85,6 +85,14 @@ Sign convention: wideband − lowpass (pp lost by the 4 kHz low-pass); positive 
 - 90% CI (pp) = [-1.612, +1.758] -> TOST @±1pp: not established
 - sample SD: CRNN=1.4134 pp (n=5), CNN=1.4514 pp (n=5)
 
+## (d-paired) Architecture: CRNN vs. CNN, English contrast, wideband_16k/none — SINGLE PAIRED RUN
+
+- **Paired?** True (alignment confirmed: True) — Fold-level pairing IS confirmed: run_bandwise_paired computes the GroupKFold folds once and trains both architectures on those identical splits within a single run; the per-fold held-out group ids are logged in `fold_group_ids`. This supersedes the unpaired Welch estimate in (d) for the architecture comparison. NOTE: this is a fresh training run, so its CRNN/CNN accuracies are NOT identical to the separately-run results_cv_en.json / results_cv_en_cnn.json headline numbers.
+- run: seed=42, k_folds=5, epochs=15; CRNN mean = **96.1940%**, CNN mean = **96.9562%**
+- diff (CRNN − CNN) = **-0.7623 pp** (sample SD of diff 1.5438 pp, SE 0.6904 pp)
+- 95% CI (pp) = [-2.679, +1.155], paired-t p = 0.3315, Wilcoxon p = 0.4375 (scipy exact)
+- 90% CI (pp) = [-2.234, +0.710] → TOST @±1pp: not established
+
 ## Per-config t-based 95% CI of the mean accuracy (all configs, all files)
 
 Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.
@@ -157,15 +165,3 @@ Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·
 | results_cv_gn.json | bandrestrict_4k/instance | 74.6257 | 41.8634 | [22.6454, 126.6060] | 37.4438 |
 | results_cv_gn.json | lowpass_4k/none | 58.7746 | 52.2050 | [-6.0465, 123.5956] | 46.6935 |
 | results_cv_gn.json | lowpass_4k/instance | 63.1798 | 45.7505 | [6.3731, 119.9865] | 40.9205 |
-
-## Model parameter counts
-
-Instantiated from `experiments/lid/model.py` (untrained, architecture-only count of `requires_grad=True` parameters).
-
-| Model | Trainable params | Approx. fp32 size (MiB) |
-|---|---:|---:|
-| CRNN_LID | 1,291,329 | 4.926 |
-| CNN_LID | 101,441 | 0.387 |
-
-Ratio CRNN/CNN = **12.73x**.
-

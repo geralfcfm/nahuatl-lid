@@ -180,12 +180,65 @@ def build_architecture() -> list[dict]:
     return [res]
 
 
+PAIRED_FILE = "results_cv_en_paired.json"
+
+
+def build_architecture_paired() -> list[dict]:
+    """(d-paired) CRNN vs. CNN on the English contrast, wideband_16k/none, from a
+    SINGLE paired run (experiments/lid/run_matrix.run_bandwise_paired, invoked via
+    experiments/modal_app.py experiment="cv_paired").
+
+    Unlike build_architecture()'s unpaired Welch comparison, here GroupKFold folds
+    are computed ONCE and BOTH architectures train on the identical per-fold splits
+    within one process, so fold index i is the same held-out group set for both ->
+    a valid PAIRED t-test/TOST. The logged `fold_group_ids` make the shared
+    partition auditable. This supersedes (d) for the architecture claim.
+
+    Returns [] if the paired result file is absent (it is produced only after the
+    cv_paired experiment is run), so this script still runs from the originally
+    committed result files alone.
+    """
+    path = RESULTS_DIR / PAIRED_FILE
+    if not path.exists():
+        return []
+    with open(path) as f:
+        data = json.load(f)
+    cfg = next(
+        (c for c in data["configs"] if c["band"] == "wideband_16k" and c["norm"] == "none"),
+        None,
+    )
+    if cfg is None:
+        return []
+    crnn_accs = cfg["crnn_folds"]
+    cnn_accs = cfg["cnn_folds"]
+    label = "CRNN - CNN, English contrast, wideband_16k/none (single paired run)"
+    res = paired_compare(crnn_accs, cnn_accs, label).to_dict()
+    res["file"] = PAIRED_FILE
+    res["alignment_confirmed"] = True
+    res["alignment_note"] = (
+        "Fold-level pairing IS confirmed: run_bandwise_paired computes the GroupKFold "
+        "folds once and trains both architectures on those identical splits within a "
+        "single run; the per-fold held-out group ids are logged in `fold_group_ids`. "
+        "This supersedes the unpaired Welch estimate in (d) for the architecture "
+        "comparison. NOTE: this is a fresh training run, so its CRNN/CNN accuracies "
+        "are NOT identical to the separately-run results_cv_en.json / "
+        "results_cv_en_cnn.json headline numbers."
+    )
+    res["crnn_mean_pct"] = round(sum(crnn_accs) / len(crnn_accs) * 100.0, 4)
+    res["cnn_mean_pct"] = round(sum(cnn_accs) / len(cnn_accs) * 100.0, 4)
+    res["seed"] = data["meta"].get("seed")
+    res["k_folds"] = data["meta"].get("k_folds")
+    res["epochs"] = data["meta"].get("epochs")
+    return [res]
+
+
 def main() -> None:
     per_config_ci = build_per_config_ci()
     baseline = build_baseline_config_invariance()
     bandwidth = build_bandwidth()
     norm = build_norm()
     architecture = build_architecture()
+    architecture_paired = build_architecture_paired()
 
     out = {
         "meta": {
@@ -221,6 +274,7 @@ def main() -> None:
             "bandwidth_wideband_minus_lowpass": bandwidth,
             "norm_none_minus_instance": norm,
             "architecture_cnn_vs_crnn": architecture,
+            "architecture_cnn_vs_crnn_paired": architecture_paired,
         },
     }
 
@@ -305,6 +359,16 @@ def write_markdown(out: dict) -> None:
         lines.append(f"- Welch df ≈ {r['df']:.2f}, 95% CI (pp) = {fmt_ci(r['ci95_pp'])}, t p = {r['p_ttest_two_sided']:.4f}")
         lines.append(f"- 90% CI (pp) = {fmt_ci(r['ci90_pp'])} -> TOST @±1pp: {'ESTABLISHED' if r['tost_established'] else 'not established'}")
         lines.append(f"- sample SD: CRNN={r['sample_sd_a_pp']:.4f} pp (n={r['n1']}), CNN={r['sample_sd_b_pp']:.4f} pp (n={r['n2']})")
+
+    paired_arch = out["comparisons"].get("architecture_cnn_vs_crnn_paired", [])
+    if paired_arch:
+        lines.append("\n## (d-paired) Architecture: CRNN vs. CNN, English contrast, wideband_16k/none — SINGLE PAIRED RUN\n")
+        for r in paired_arch:
+            lines.append(f"- **Paired?** {r['paired']} (alignment confirmed: {r['alignment_confirmed']}) — {r['alignment_note']}")
+            lines.append(f"- run: seed={r['seed']}, k_folds={r['k_folds']}, epochs={r['epochs']}; CRNN mean = **{r['crnn_mean_pct']:.4f}%**, CNN mean = **{r['cnn_mean_pct']:.4f}%**")
+            lines.append(f"- diff (CRNN − CNN) = **{r['diff_mean_pp']:+.4f} pp** (sample SD of diff {r['sample_sd_diff_pp']:.4f} pp, SE {r['se_diff_pp']:.4f} pp)")
+            lines.append(f"- 95% CI (pp) = {fmt_ci(r['ci95_pp'])}, paired-t p = {r['p_ttest_two_sided']:.4f}, Wilcoxon p = {fmt_p(r['p_wilcoxon_two_sided'])} ({r['wilcoxon_method']})")
+            lines.append(f"- 90% CI (pp) = {fmt_ci(r['ci90_pp'])} → TOST @±1pp: {'ESTABLISHED' if r['tost_established'] else 'not established'}")
 
     lines.append("\n## Per-config t-based 95% CI of the mean accuracy (all configs, all files)\n")
     lines.append("Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.\n")
