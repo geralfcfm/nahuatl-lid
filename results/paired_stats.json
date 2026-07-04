@@ -1,0 +1,1959 @@
+{
+  "meta": {
+    "n_folds": 5,
+    "df_paired": 4,
+    "t_crit_95_df4": 2.776,
+    "t_crit_90_df4": 2.132,
+    "equivalence_margin_pp": 1.0,
+    "stats_backend": "scipy",
+    "scipy_version": "1.13.1",
+    "sd_convention_note": "results/*.json 'std_acc' is POPULATION SD (statistics.pstdev, ddof=0). All SD-based quantities in THIS file (sample_sd_diff_pp, sample_sd_pp, CIs) use SAMPLE SD (ddof=1) instead, as required for t-based inference.",
+    "tost_rule_note": "TOST at alpha=.05 against a +/-1pp margin is implemented as: 90% CI of the difference (using t_0.95(4)=2.132) lies entirely within [-1, +1] pp. The 95% CI (t_0.975(4)=2.776) is reported separately for uncertainty only and is NOT the TOST criterion.",
+    "independence_caveat": "All paired comparisons are fold-level, EXPLORATORY comparisons over 5 overlapping-training GroupKFold splits of the SAME data (same seed=42, k_folds=5) -- NOT five independent experiments, NOT population-level proof. Treat p-values/CIs here as descriptive/exploratory, not confirmatory.",
+    "no_new_training": "All numbers derive from already-committed results/*.json; no models were (re)trained."
+  },
+  "per_config_ci": [
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9764,
+      "sample_sd_pp": 0.0439,
+      "ci95_low_pct": 99.922,
+      "ci95_high_pct": 100.0309,
+      "file": "results.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.0392
+    },
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.9731,
+      "sample_sd_pp": 0.0349,
+      "ci95_low_pct": 99.9298,
+      "ci95_high_pct": 100.0164,
+      "file": "results.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0312
+    },
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9664,
+      "sample_sd_pp": 0.0357,
+      "ci95_low_pct": 99.922,
+      "ci95_high_pct": 100.0107,
+      "file": "results.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.0319
+    },
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.9731,
+      "sample_sd_pp": 0.0255,
+      "ci95_low_pct": 99.9414,
+      "ci95_high_pct": 100.0048,
+      "file": "results.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0228
+    },
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9832,
+      "sample_sd_pp": 0.0206,
+      "ci95_low_pct": 99.9576,
+      "ci95_high_pct": 100.0088,
+      "file": "results.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.0184
+    },
+    {
+      "label": "Baseline (field Nahuatl vs. studio Spanish) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.9563,
+      "sample_sd_pp": 0.0439,
+      "ci95_low_pct": 99.9018,
+      "ci95_high_pct": 100.0107,
+      "file": "results.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0392
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9092,
+      "sample_sd_pp": 0.1181,
+      "ci95_low_pct": 99.7625,
+      "ci95_high_pct": 100.0558,
+      "file": "results_shuffle.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.1057
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.9058,
+      "sample_sd_pp": 0.1181,
+      "ci95_low_pct": 99.7591,
+      "ci95_high_pct": 100.0525,
+      "file": "results_shuffle.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.1057
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9058,
+      "sample_sd_pp": 0.0941,
+      "ci95_low_pct": 99.7889,
+      "ci95_high_pct": 100.0227,
+      "file": "results_shuffle.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.0842
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.852,
+      "sample_sd_pp": 0.106,
+      "ci95_low_pct": 99.7203,
+      "ci95_high_pct": 99.9836,
+      "file": "results_shuffle.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0948
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.9293,
+      "sample_sd_pp": 0.055,
+      "ci95_low_pct": 99.861,
+      "ci95_high_pct": 99.9977,
+      "file": "results_shuffle.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.0492
+    },
+    {
+      "label": "Probe: time-shuffle on baseline | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.9226,
+      "sample_sd_pp": 0.0803,
+      "ci95_low_pct": 99.8229,
+      "ci95_high_pct": 100.0224,
+      "file": "results_shuffle.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0719
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 99.7577,
+      "sample_sd_pp": 0.1603,
+      "ci95_low_pct": 99.5587,
+      "ci95_high_pct": 99.9568,
+      "file": "results_degrade.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.1434
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.8654,
+      "sample_sd_pp": 0.1084,
+      "ci95_low_pct": 99.7308,
+      "ci95_high_pct": 100.0,
+      "file": "results_degrade.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0969
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.8318,
+      "sample_sd_pp": 0.1265,
+      "ci95_low_pct": 99.6747,
+      "ci95_high_pct": 99.9888,
+      "file": "results_degrade.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.1131
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.8587,
+      "sample_sd_pp": 0.071,
+      "ci95_low_pct": 99.7705,
+      "ci95_high_pct": 99.9468,
+      "file": "results_degrade.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.0635
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 99.7645,
+      "sample_sd_pp": 0.2005,
+      "ci95_low_pct": 99.5155,
+      "ci95_high_pct": 100.0134,
+      "file": "results_degrade.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 0.1793
+    },
+    {
+      "label": "Probe: cheap-mic degradation on baseline | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 99.8284,
+      "sample_sd_pp": 0.1548,
+      "ci95_low_pct": 99.6361,
+      "ci95_high_pct": 100.0206,
+      "file": "results_degrade.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.1385
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 96.883,
+      "sample_sd_pp": 1.7761,
+      "ci95_low_pct": 94.6778,
+      "ci95_high_pct": 99.0883,
+      "file": "results_cv_es.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.5886
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 95.4759,
+      "sample_sd_pp": 1.5531,
+      "ci95_low_pct": 93.5476,
+      "ci95_high_pct": 97.4043,
+      "file": "results_cv_es.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 1.3891
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 95.8374,
+      "sample_sd_pp": 1.6832,
+      "ci95_low_pct": 93.7474,
+      "ci95_high_pct": 97.9273,
+      "file": "results_cv_es.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.5055
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 94.6843,
+      "sample_sd_pp": 1.7584,
+      "ci95_low_pct": 92.501,
+      "ci95_high_pct": 96.8676,
+      "file": "results_cv_es.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 1.5727
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 96.624,
+      "sample_sd_pp": 1.4571,
+      "ci95_low_pct": 94.8148,
+      "ci95_high_pct": 98.4332,
+      "file": "results_cv_es.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.3033
+    },
+    {
+      "label": "CV: Nahuatl vs. Spanish (es) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 96.0035,
+      "sample_sd_pp": 1.143,
+      "ci95_low_pct": 94.5843,
+      "ci95_high_pct": 97.4228,
+      "file": "results_cv_es.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 1.0223
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 97.0296,
+      "sample_sd_pp": 1.4134,
+      "ci95_low_pct": 95.2746,
+      "ci95_high_pct": 98.7845,
+      "file": "results_cv_en.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.2642
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 95.896,
+      "sample_sd_pp": 0.697,
+      "ci95_low_pct": 95.0305,
+      "ci95_high_pct": 96.7615,
+      "file": "results_cv_en.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 0.6234
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 95.7543,
+      "sample_sd_pp": 1.3251,
+      "ci95_low_pct": 94.109,
+      "ci95_high_pct": 97.3997,
+      "file": "results_cv_en.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.1852
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 92.5347,
+      "sample_sd_pp": 4.2257,
+      "ci95_low_pct": 87.2878,
+      "ci95_high_pct": 97.7815,
+      "file": "results_cv_en.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 3.7795
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 96.7168,
+      "sample_sd_pp": 1.4358,
+      "ci95_low_pct": 94.934,
+      "ci95_high_pct": 98.4996,
+      "file": "results_cv_en.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.2842
+    },
+    {
+      "label": "CV: Nahuatl vs. English (en) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 94.5083,
+      "sample_sd_pp": 3.9256,
+      "ci95_low_pct": 89.634,
+      "ci95_high_pct": 99.3826,
+      "file": "results_cv_en.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 3.5112
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 97.7573,
+      "sample_sd_pp": 1.8309,
+      "ci95_low_pct": 95.484,
+      "ci95_high_pct": 100.0306,
+      "file": "results_cv_tar.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.6376
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 96.4751,
+      "sample_sd_pp": 3.8927,
+      "ci95_low_pct": 91.6417,
+      "ci95_high_pct": 101.3085,
+      "file": "results_cv_tar.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 3.4817
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 94.6777,
+      "sample_sd_pp": 3.9158,
+      "ci95_low_pct": 89.8155,
+      "ci95_high_pct": 99.5398,
+      "file": "results_cv_tar.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 3.5024
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 93.4919,
+      "sample_sd_pp": 5.1695,
+      "ci95_low_pct": 87.0732,
+      "ci95_high_pct": 99.9106,
+      "file": "results_cv_tar.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 4.6237
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 96.2445,
+      "sample_sd_pp": 4.9988,
+      "ci95_low_pct": 90.0376,
+      "ci95_high_pct": 102.4513,
+      "file": "results_cv_tar.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 4.4711
+    },
+    {
+      "label": "CV: Nahuatl vs. Raramuri (tar) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 97.3282,
+      "sample_sd_pp": 2.5686,
+      "ci95_low_pct": 94.1389,
+      "ci95_high_pct": 100.5174,
+      "file": "results_cv_tar.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 2.2974
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 89.2421,
+      "sample_sd_pp": 7.808,
+      "ci95_low_pct": 79.5472,
+      "ci95_high_pct": 98.937,
+      "file": "results_cv_sei.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 6.9837
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 86.9155,
+      "sample_sd_pp": 7.2163,
+      "ci95_low_pct": 77.9552,
+      "ci95_high_pct": 95.8758,
+      "file": "results_cv_sei.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 6.4545
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 90.0331,
+      "sample_sd_pp": 8.9249,
+      "ci95_low_pct": 78.9514,
+      "ci95_high_pct": 101.1149,
+      "file": "results_cv_sei.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 7.9827
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 86.0654,
+      "sample_sd_pp": 10.2218,
+      "ci95_low_pct": 73.3734,
+      "ci95_high_pct": 98.7574,
+      "file": "results_cv_sei.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 9.1426
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 89.416,
+      "sample_sd_pp": 6.7383,
+      "ci95_low_pct": 81.0493,
+      "ci95_high_pct": 97.7826,
+      "file": "results_cv_sei.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 6.0269
+    },
+    {
+      "label": "CV: Nahuatl vs. Seri (sei) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 87.6172,
+      "sample_sd_pp": 8.095,
+      "ci95_low_pct": 77.5659,
+      "ci95_high_pct": 97.6685,
+      "file": "results_cv_sei.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 7.2404
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 82.1285,
+      "sample_sd_pp": 12.4844,
+      "ci95_low_pct": 66.6271,
+      "ci95_high_pct": 97.6299,
+      "file": "results_cv_qxp.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 11.1664
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 82.0845,
+      "sample_sd_pp": 10.1809,
+      "ci95_low_pct": 69.4432,
+      "ci95_high_pct": 94.7258,
+      "file": "results_cv_qxp.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 9.1061
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 86.2127,
+      "sample_sd_pp": 6.876,
+      "ci95_low_pct": 77.675,
+      "ci95_high_pct": 94.7504,
+      "file": "results_cv_qxp.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 6.1501
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 85.5873,
+      "sample_sd_pp": 6.3603,
+      "ci95_low_pct": 77.6899,
+      "ci95_high_pct": 93.4846,
+      "file": "results_cv_qxp.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 5.6888
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 81.9672,
+      "sample_sd_pp": 13.5576,
+      "ci95_low_pct": 65.1333,
+      "ci95_high_pct": 98.8012,
+      "file": "results_cv_qxp.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 12.1263
+    },
+    {
+      "label": "CV: Nahuatl vs. Quechua (qxp) | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 82.3141,
+      "sample_sd_pp": 12.4258,
+      "ci95_low_pct": 66.8854,
+      "ci95_high_pct": 97.7427,
+      "file": "results_cv_qxp.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 11.1139
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 96.9562,
+      "sample_sd_pp": 1.4514,
+      "ci95_low_pct": 95.154,
+      "ci95_high_pct": 98.7584,
+      "file": "results_cv_en_cnn.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 1.2982
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 95.6567,
+      "sample_sd_pp": 1.4541,
+      "ci95_low_pct": 93.8512,
+      "ci95_high_pct": 97.4622,
+      "file": "results_cv_en_cnn.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 1.3006
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 94.5867,
+      "sample_sd_pp": 2.9656,
+      "ci95_low_pct": 90.9044,
+      "ci95_high_pct": 98.269,
+      "file": "results_cv_en_cnn.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 2.6525
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 93.0331,
+      "sample_sd_pp": 3.1632,
+      "ci95_low_pct": 89.1054,
+      "ci95_high_pct": 96.9608,
+      "file": "results_cv_en_cnn.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 2.8293
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 95.7201,
+      "sample_sd_pp": 2.9799,
+      "ci95_low_pct": 92.0201,
+      "ci95_high_pct": 99.4201,
+      "file": "results_cv_en_cnn.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 2.6653
+    },
+    {
+      "label": "Architecture ablation: CNN front-end, en contrast | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 95.2805,
+      "sample_sd_pp": 2.8337,
+      "ci95_low_pct": 91.762,
+      "ci95_high_pct": 98.799,
+      "file": "results_cv_en_cnn.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 2.5345
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 91.802,
+      "sample_sd_pp": 3.8172,
+      "ci95_low_pct": 87.0624,
+      "ci95_high_pct": 96.5417,
+      "file": "results_cv_en_shuffle.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 3.4142
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 89.7158,
+      "sample_sd_pp": 4.3076,
+      "ci95_low_pct": 84.3672,
+      "ci95_high_pct": 95.0644,
+      "file": "results_cv_en_shuffle.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 3.8528
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 86.7991,
+      "sample_sd_pp": 8.3451,
+      "ci95_low_pct": 76.4373,
+      "ci95_high_pct": 97.161,
+      "file": "results_cv_en_shuffle.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 7.4641
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 85.6414,
+      "sample_sd_pp": 4.8909,
+      "ci95_low_pct": 79.5686,
+      "ci95_high_pct": 91.7142,
+      "file": "results_cv_en_shuffle.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 4.3745
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 91.2108,
+      "sample_sd_pp": 5.1238,
+      "ci95_low_pct": 84.8488,
+      "ci95_high_pct": 97.5728,
+      "file": "results_cv_en_shuffle.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 4.5829
+    },
+    {
+      "label": "Probe: genuine time-shuffle, en contrast | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 89.3885,
+      "sample_sd_pp": 4.923,
+      "ci95_low_pct": 83.2758,
+      "ci95_high_pct": 95.5011,
+      "file": "results_cv_en_shuffle.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 4.4032
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | wideband_16k/none",
+      "n": 5,
+      "mean_acc_pct": 58.235,
+      "sample_sd_pp": 50.7891,
+      "ci95_low_pct": -4.828,
+      "ci95_high_pct": 121.2981,
+      "file": "results_cv_gn.json",
+      "band": "wideband_16k",
+      "norm": "none",
+      "reported_pop_sd_pp": 45.4272
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | wideband_16k/instance",
+      "n": 5,
+      "mean_acc_pct": 63.342,
+      "sample_sd_pp": 46.6054,
+      "ci95_low_pct": 5.4738,
+      "ci95_high_pct": 121.2102,
+      "file": "results_cv_gn.json",
+      "band": "wideband_16k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 41.6851
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | bandrestrict_4k/none",
+      "n": 5,
+      "mean_acc_pct": 73.6332,
+      "sample_sd_pp": 39.6361,
+      "ci95_low_pct": 24.4184,
+      "ci95_high_pct": 122.8479,
+      "file": "results_cv_gn.json",
+      "band": "bandrestrict_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 35.4516
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | bandrestrict_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 74.6257,
+      "sample_sd_pp": 41.8634,
+      "ci95_low_pct": 22.6454,
+      "ci95_high_pct": 126.606,
+      "file": "results_cv_gn.json",
+      "band": "bandrestrict_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 37.4438
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | lowpass_4k/none",
+      "n": 5,
+      "mean_acc_pct": 58.7746,
+      "sample_sd_pp": 52.205,
+      "ci95_low_pct": -6.0465,
+      "ci95_high_pct": 123.5956,
+      "file": "results_cv_gn.json",
+      "band": "lowpass_4k",
+      "norm": "none",
+      "reported_pop_sd_pp": 46.6935
+    },
+    {
+      "label": "CV: Nahuatl vs. Guarani (gn) -- thesis-excluded, inconclusive | lowpass_4k/instance",
+      "n": 5,
+      "mean_acc_pct": 63.1798,
+      "sample_sd_pp": 45.7505,
+      "ci95_low_pct": 6.3731,
+      "ci95_high_pct": 119.9865,
+      "file": "results_cv_gn.json",
+      "band": "lowpass_4k",
+      "norm": "instance",
+      "reported_pop_sd_pp": 40.9205
+    }
+  ],
+  "comparisons": {
+    "baseline_config_invariance": [
+      {
+        "label": "wideband_16k/none vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0067,
+        "sample_sd_diff_pp": 0.0455,
+        "se_diff_pp": 0.0203,
+        "df": 4,
+        "t_stat": -0.331,
+        "p_ttest_two_sided": 0.757228,
+        "wilcoxon_stat": 3.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0632,
+          0.0497
+        ],
+        "ci90_pp": [
+          -0.0501,
+          0.0366
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "wideband_16k/none",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": false
+      },
+      {
+        "label": "wideband_16k/instance vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0101,
+        "sample_sd_diff_pp": 0.0349,
+        "se_diff_pp": 0.0156,
+        "df": 4,
+        "t_stat": -0.647,
+        "p_ttest_two_sided": 0.552889,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.875,
+        "wilcoxon_method": "scipy exact (n=4 after dropping 1 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0534,
+          0.0332
+        ],
+        "ci90_pp": [
+          -0.0434,
+          0.0232
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "wideband_16k/instance",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": false
+      },
+      {
+        "label": "bandrestrict_4k/none vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0168,
+        "sample_sd_diff_pp": 0.0336,
+        "se_diff_pp": 0.015,
+        "df": 4,
+        "t_stat": -1.118,
+        "p_ttest_two_sided": 0.326164,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.5,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0586,
+          0.025
+        ],
+        "ci90_pp": [
+          -0.0489,
+          0.0153
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "bandrestrict_4k/none",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": false
+      },
+      {
+        "label": "bandrestrict_4k/instance vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0101,
+        "sample_sd_diff_pp": 0.0328,
+        "se_diff_pp": 0.0147,
+        "df": 4,
+        "t_stat": -0.6882,
+        "p_ttest_two_sided": 0.529133,
+        "wilcoxon_stat": 1.5,
+        "p_wilcoxon_two_sided": 0.5,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0508,
+          0.0306
+        ],
+        "ci90_pp": [
+          -0.0414,
+          0.0212
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "bandrestrict_4k/instance",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": false
+      },
+      {
+        "label": "lowpass_4k/none vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0,
+        "sample_sd_diff_pp": 0.0,
+        "se_diff_pp": 0.0,
+        "df": 4,
+        "t_stat": 0.0,
+        "p_ttest_two_sided": 1.0,
+        "wilcoxon_stat": null,
+        "p_wilcoxon_two_sided": null,
+        "wilcoxon_method": "all differences are exactly zero; Wilcoxon undefined",
+        "ci95_pp": [
+          0.0,
+          0.0
+        ],
+        "ci90_pp": [
+          0.0,
+          0.0
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "lowpass_4k/none",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": true
+      },
+      {
+        "label": "lowpass_4k/instance vs best (lowpass_4k/none)",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0269,
+        "sample_sd_diff_pp": 0.0455,
+        "se_diff_pp": 0.0203,
+        "df": 4,
+        "t_stat": -1.3242,
+        "p_ttest_two_sided": 0.256044,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.5,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0834,
+          0.0295
+        ],
+        "ci90_pp": [
+          -0.0703,
+          0.0164
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "config": "lowpass_4k/instance",
+        "best_config": "lowpass_4k/none",
+        "is_best_itself": false
+      }
+    ],
+    "bandwidth_wideband_minus_lowpass": [
+      {
+        "label": "es: wideband_16k/none - lowpass_4k/none",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.259,
+        "sample_sd_diff_pp": 1.3541,
+        "se_diff_pp": 0.6056,
+        "df": 4,
+        "t_stat": 0.4277,
+        "p_ttest_two_sided": 0.690859,
+        "wilcoxon_stat": 6.0,
+        "p_wilcoxon_two_sided": 0.8125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.4223,
+          1.9404
+        ],
+        "ci90_pp": [
+          -1.0319,
+          1.55
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_es.json",
+        "contrast": "es"
+      },
+      {
+        "label": "en: wideband_16k/none - lowpass_4k/none",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.3128,
+        "sample_sd_diff_pp": 1.5101,
+        "se_diff_pp": 0.6753,
+        "df": 4,
+        "t_stat": 0.4632,
+        "p_ttest_two_sided": 0.667332,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.4375,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.5622,
+          2.1878
+        ],
+        "ci90_pp": [
+          -1.1269,
+          1.7525
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en.json",
+        "contrast": "en"
+      },
+      {
+        "label": "tar: wideband_16k/none - lowpass_4k/none",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.5128,
+        "sample_sd_diff_pp": 3.3326,
+        "se_diff_pp": 1.4904,
+        "df": 4,
+        "t_stat": 1.0151,
+        "p_ttest_two_sided": 0.367486,
+        "wilcoxon_stat": 5.0,
+        "p_wilcoxon_two_sided": 0.625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -2.6251,
+          5.6508
+        ],
+        "ci90_pp": [
+          -1.6644,
+          4.6901
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_tar.json",
+        "contrast": "tar"
+      },
+      {
+        "label": "sei: wideband_16k/none - lowpass_4k/none",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.1739,
+        "sample_sd_diff_pp": 4.094,
+        "se_diff_pp": 1.8309,
+        "df": 4,
+        "t_stat": -0.095,
+        "p_ttest_two_sided": 0.928913,
+        "wilcoxon_stat": 6.0,
+        "p_wilcoxon_two_sided": 0.8125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -5.2573,
+          4.9096
+        ],
+        "ci90_pp": [
+          -4.0771,
+          3.7294
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_sei.json",
+        "contrast": "sei"
+      },
+      {
+        "label": "qxp: wideband_16k/none - lowpass_4k/none",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.1613,
+        "sample_sd_diff_pp": 4.3989,
+        "se_diff_pp": 1.9673,
+        "df": 4,
+        "t_stat": 0.082,
+        "p_ttest_two_sided": 0.938599,
+        "wilcoxon_stat": 5.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact (n=4 after dropping 1 zero-diff fold(s))",
+        "ci95_pp": [
+          -5.3007,
+          5.6233
+        ],
+        "ci90_pp": [
+          -4.0326,
+          4.3552
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_qxp.json",
+        "contrast": "qxp"
+      }
+    ],
+    "norm_none_minus_instance": [
+      {
+        "label": "Baseline (field Nahuatl vs. studio Spanish) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0034,
+        "sample_sd_diff_pp": 0.0141,
+        "se_diff_pp": 0.0063,
+        "df": 4,
+        "t_stat": 0.5345,
+        "p_ttest_two_sided": 0.621308,
+        "wilcoxon_stat": 3.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0141,
+          0.0208
+        ],
+        "ci90_pp": [
+          -0.0101,
+          0.0168
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "experiment": "Baseline (field Nahuatl vs. studio Spanish)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "Baseline (field Nahuatl vs. studio Spanish) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0067,
+        "sample_sd_diff_pp": 0.0387,
+        "se_diff_pp": 0.0173,
+        "df": 4,
+        "t_stat": -0.3885,
+        "p_ttest_two_sided": 0.717428,
+        "wilcoxon_stat": 4.5,
+        "p_wilcoxon_two_sided": 0.875,
+        "wilcoxon_method": "scipy exact (n=4 after dropping 1 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0548,
+          0.0414
+        ],
+        "ci90_pp": [
+          -0.0437,
+          0.0302
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "experiment": "Baseline (field Nahuatl vs. studio Spanish)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "Baseline (field Nahuatl vs. studio Spanish) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0269,
+        "sample_sd_diff_pp": 0.0455,
+        "se_diff_pp": 0.0203,
+        "df": 4,
+        "t_stat": 1.3242,
+        "p_ttest_two_sided": 0.256044,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.5,
+        "wilcoxon_method": "scipy exact (n=3 after dropping 2 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0295,
+          0.0834
+        ],
+        "ci90_pp": [
+          -0.0164,
+          0.0703
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results.json",
+        "experiment": "Baseline (field Nahuatl vs. studio Spanish)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "Probe: time-shuffle on baseline | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0034,
+        "sample_sd_diff_pp": 0.0301,
+        "se_diff_pp": 0.0135,
+        "df": 4,
+        "t_stat": 0.25,
+        "p_ttest_two_sided": 0.814902,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact (n=2 after dropping 3 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.034,
+          0.0407
+        ],
+        "ci90_pp": [
+          -0.0253,
+          0.0321
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_shuffle.json",
+        "experiment": "Probe: time-shuffle on baseline",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "Probe: time-shuffle on baseline | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0538,
+        "sample_sd_diff_pp": 0.0482,
+        "se_diff_pp": 0.0215,
+        "df": 4,
+        "t_stat": 2.4988,
+        "p_ttest_two_sided": 0.066854,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.006,
+          0.1137
+        ],
+        "ci90_pp": [
+          0.0079,
+          0.0998
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_shuffle.json",
+        "experiment": "Probe: time-shuffle on baseline",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "Probe: time-shuffle on baseline | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.0067,
+        "sample_sd_diff_pp": 0.0553,
+        "se_diff_pp": 0.0247,
+        "df": 4,
+        "t_stat": 0.2722,
+        "p_ttest_two_sided": 0.798966,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.875,
+        "wilcoxon_method": "scipy exact (n=4 after dropping 1 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.0619,
+          0.0754
+        ],
+        "ci90_pp": [
+          -0.046,
+          0.0594
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_shuffle.json",
+        "experiment": "Probe: time-shuffle on baseline",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "Probe: cheap-mic degradation on baseline | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.1077,
+        "sample_sd_diff_pp": 0.0812,
+        "se_diff_pp": 0.0363,
+        "df": 4,
+        "t_stat": -2.9647,
+        "p_ttest_two_sided": 0.041359,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.2085,
+          -0.0068
+        ],
+        "ci90_pp": [
+          -0.1851,
+          -0.0302
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_degrade.json",
+        "experiment": "Probe: cheap-mic degradation on baseline",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "Probe: cheap-mic degradation on baseline | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0269,
+        "sample_sd_diff_pp": 0.0614,
+        "se_diff_pp": 0.0274,
+        "df": 4,
+        "t_stat": -0.981,
+        "p_ttest_two_sided": 0.382126,
+        "wilcoxon_stat": 3.0,
+        "p_wilcoxon_two_sided": 0.625,
+        "wilcoxon_method": "scipy exact (n=4 after dropping 1 zero-diff fold(s))",
+        "ci95_pp": [
+          -0.1031,
+          0.0493
+        ],
+        "ci90_pp": [
+          -0.0854,
+          0.0316
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_degrade.json",
+        "experiment": "Probe: cheap-mic degradation on baseline",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "Probe: cheap-mic degradation on baseline | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.0639,
+        "sample_sd_diff_pp": 0.0747,
+        "se_diff_pp": 0.0334,
+        "df": 4,
+        "t_stat": -1.9144,
+        "p_ttest_two_sided": 0.128093,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.1566,
+          0.0288
+        ],
+        "ci90_pp": [
+          -0.1351,
+          0.0073
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": true,
+        "file": "results_degrade.json",
+        "experiment": "Probe: cheap-mic degradation on baseline",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Spanish (es) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.4071,
+        "sample_sd_diff_pp": 0.586,
+        "se_diff_pp": 0.2621,
+        "df": 4,
+        "t_stat": 5.3689,
+        "p_ttest_two_sided": 0.005812,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          0.6794,
+          2.1348
+        ],
+        "ci90_pp": [
+          0.8484,
+          1.9658
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_es.json",
+        "experiment": "CV: Nahuatl vs. Spanish (es)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Spanish (es) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.1531,
+        "sample_sd_diff_pp": 1.9089,
+        "se_diff_pp": 0.8537,
+        "df": 4,
+        "t_stat": 1.3507,
+        "p_ttest_two_sided": 0.248135,
+        "wilcoxon_stat": 3.0,
+        "p_wilcoxon_two_sided": 0.3125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.2171,
+          3.5233
+        ],
+        "ci90_pp": [
+          -0.6668,
+          2.973
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_es.json",
+        "experiment": "CV: Nahuatl vs. Spanish (es)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Spanish (es) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.6205,
+        "sample_sd_diff_pp": 0.6949,
+        "se_diff_pp": 0.3108,
+        "df": 4,
+        "t_stat": 1.9966,
+        "p_ttest_two_sided": 0.116564,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.2423,
+          1.4832
+        ],
+        "ci90_pp": [
+          -0.042,
+          1.2829
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_es.json",
+        "experiment": "CV: Nahuatl vs. Spanish (es)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. English (en) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.1336,
+        "sample_sd_diff_pp": 1.9368,
+        "se_diff_pp": 0.8662,
+        "df": 4,
+        "t_stat": 1.3087,
+        "p_ttest_two_sided": 0.260751,
+        "wilcoxon_stat": 3.0,
+        "p_wilcoxon_two_sided": 0.3125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.2713,
+          3.5384
+        ],
+        "ci90_pp": [
+          -0.7129,
+          2.9801
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en.json",
+        "experiment": "CV: Nahuatl vs. English (en)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "CV: Nahuatl vs. English (en) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 3.2197,
+        "sample_sd_diff_pp": 3.0785,
+        "se_diff_pp": 1.3767,
+        "df": 4,
+        "t_stat": 2.3386,
+        "p_ttest_two_sided": 0.079498,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.6028,
+          7.0421
+        ],
+        "ci90_pp": [
+          0.2847,
+          6.1547
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en.json",
+        "experiment": "CV: Nahuatl vs. English (en)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. English (en) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 2.2085,
+        "sample_sd_diff_pp": 2.6165,
+        "se_diff_pp": 1.1701,
+        "df": 4,
+        "t_stat": 1.8874,
+        "p_ttest_two_sided": 0.132149,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.0403,
+          5.4572
+        ],
+        "ci90_pp": [
+          -0.286,
+          4.703
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en.json",
+        "experiment": "CV: Nahuatl vs. English (en)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Raramuri (tar) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.2822,
+        "sample_sd_diff_pp": 2.08,
+        "se_diff_pp": 0.9302,
+        "df": 4,
+        "t_stat": 1.3785,
+        "p_ttest_two_sided": 0.240136,
+        "wilcoxon_stat": 2.0,
+        "p_wilcoxon_two_sided": 0.1875,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -1.3004,
+          3.8649
+        ],
+        "ci90_pp": [
+          -0.7008,
+          3.2653
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_tar.json",
+        "experiment": "CV: Nahuatl vs. Raramuri (tar)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Raramuri (tar) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.1858,
+        "sample_sd_diff_pp": 1.4663,
+        "se_diff_pp": 0.6557,
+        "df": 4,
+        "t_stat": 1.8083,
+        "p_ttest_two_sided": 0.144828,
+        "wilcoxon_stat": 1.5,
+        "p_wilcoxon_two_sided": 0.1875,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.6348,
+          3.0064
+        ],
+        "ci90_pp": [
+          -0.2121,
+          2.5837
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_tar.json",
+        "experiment": "CV: Nahuatl vs. Raramuri (tar)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Raramuri (tar) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -1.0837,
+        "sample_sd_diff_pp": 2.5716,
+        "se_diff_pp": 1.1501,
+        "df": 4,
+        "t_stat": -0.9423,
+        "p_ttest_two_sided": 0.399407,
+        "wilcoxon_stat": 5.0,
+        "p_wilcoxon_two_sided": 0.625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -4.2767,
+          2.1094
+        ],
+        "ci90_pp": [
+          -3.5354,
+          1.3681
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_tar.json",
+        "experiment": "CV: Nahuatl vs. Raramuri (tar)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Seri (sei) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 2.3266,
+        "sample_sd_diff_pp": 6.4476,
+        "se_diff_pp": 2.8835,
+        "df": 4,
+        "t_stat": 0.8069,
+        "p_ttest_two_sided": 0.464984,
+        "wilcoxon_stat": 5.0,
+        "p_wilcoxon_two_sided": 0.625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -5.6792,
+          10.3324
+        ],
+        "ci90_pp": [
+          -3.8205,
+          8.4737
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_sei.json",
+        "experiment": "CV: Nahuatl vs. Seri (sei)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Seri (sei) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 3.9678,
+        "sample_sd_diff_pp": 2.8685,
+        "se_diff_pp": 1.2828,
+        "df": 4,
+        "t_stat": 3.093,
+        "p_ttest_two_sided": 0.036468,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          0.4061,
+          7.5294
+        ],
+        "ci90_pp": [
+          1.233,
+          6.7025
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_sei.json",
+        "experiment": "CV: Nahuatl vs. Seri (sei)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Seri (sei) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.7987,
+        "sample_sd_diff_pp": 3.7453,
+        "se_diff_pp": 1.675,
+        "df": 4,
+        "t_stat": 1.0739,
+        "p_ttest_two_sided": 0.343332,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.4375,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -2.8517,
+          6.4491
+        ],
+        "ci90_pp": [
+          -1.772,
+          5.3695
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_sei.json",
+        "experiment": "CV: Nahuatl vs. Seri (sei)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Quechua (qxp) | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.044,
+        "sample_sd_diff_pp": 4.2793,
+        "se_diff_pp": 1.9138,
+        "df": 4,
+        "t_stat": 0.023,
+        "p_ttest_two_sided": 0.982767,
+        "wilcoxon_stat": 7.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -5.2695,
+          5.3574
+        ],
+        "ci90_pp": [
+          -4.0359,
+          4.1238
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_qxp.json",
+        "experiment": "CV: Nahuatl vs. Quechua (qxp)",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Quechua (qxp) | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.6254,
+        "sample_sd_diff_pp": 4.2058,
+        "se_diff_pp": 1.8809,
+        "df": 4,
+        "t_stat": 0.3325,
+        "p_ttest_two_sided": 0.756189,
+        "wilcoxon_stat": 7.0,
+        "p_wilcoxon_two_sided": 1.0,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -4.5967,
+          5.8476
+        ],
+        "ci90_pp": [
+          -3.3843,
+          4.6352
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_qxp.json",
+        "experiment": "CV: Nahuatl vs. Quechua (qxp)",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "CV: Nahuatl vs. Quechua (qxp) | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": -0.3469,
+        "sample_sd_diff_pp": 1.4242,
+        "se_diff_pp": 0.6369,
+        "df": 4,
+        "t_stat": -0.5446,
+        "p_ttest_two_sided": 0.614966,
+        "wilcoxon_stat": 5.0,
+        "p_wilcoxon_two_sided": 0.625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -2.1153,
+          1.4215
+        ],
+        "ci90_pp": [
+          -1.7047,
+          1.011
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_qxp.json",
+        "experiment": "CV: Nahuatl vs. Quechua (qxp)",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "Architecture ablation: CNN front-end, en contrast | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.2995,
+        "sample_sd_diff_pp": 1.2253,
+        "se_diff_pp": 0.548,
+        "df": 4,
+        "t_stat": 2.3716,
+        "p_ttest_two_sided": 0.076691,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.2219,
+          2.8209
+        ],
+        "ci90_pp": [
+          0.1314,
+          2.4677
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_cnn.json",
+        "experiment": "Architecture ablation: CNN front-end, en contrast",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "Architecture ablation: CNN front-end, en contrast | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.5536,
+        "sample_sd_diff_pp": 1.1578,
+        "se_diff_pp": 0.5178,
+        "df": 4,
+        "t_stat": 3.0005,
+        "p_ttest_two_sided": 0.039924,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          0.116,
+          2.9912
+        ],
+        "ci90_pp": [
+          0.4498,
+          2.6574
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_cnn.json",
+        "experiment": "Architecture ablation: CNN front-end, en contrast",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "Architecture ablation: CNN front-end, en contrast | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 0.4396,
+        "sample_sd_diff_pp": 0.7065,
+        "se_diff_pp": 0.316,
+        "df": 4,
+        "t_stat": 1.3915,
+        "p_ttest_two_sided": 0.236467,
+        "wilcoxon_stat": 4.0,
+        "p_wilcoxon_two_sided": 0.4375,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.4376,
+          1.3169
+        ],
+        "ci90_pp": [
+          -0.2339,
+          1.1132
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_cnn.json",
+        "experiment": "Architecture ablation: CNN front-end, en contrast",
+        "band": "lowpass_4k"
+      },
+      {
+        "label": "Probe: genuine time-shuffle, en contrast | wideband_16k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 2.0862,
+        "sample_sd_diff_pp": 1.5234,
+        "se_diff_pp": 0.6813,
+        "df": 4,
+        "t_stat": 3.0622,
+        "p_ttest_two_sided": 0.037579,
+        "wilcoxon_stat": 0.0,
+        "p_wilcoxon_two_sided": 0.0625,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          0.1947,
+          3.9778
+        ],
+        "ci90_pp": [
+          0.6338,
+          3.5386
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_shuffle.json",
+        "experiment": "Probe: genuine time-shuffle, en contrast",
+        "band": "wideband_16k"
+      },
+      {
+        "label": "Probe: genuine time-shuffle, en contrast | bandrestrict_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.1577,
+        "sample_sd_diff_pp": 5.31,
+        "se_diff_pp": 2.3747,
+        "df": 4,
+        "t_stat": 0.4875,
+        "p_ttest_two_sided": 0.651393,
+        "wilcoxon_stat": 6.0,
+        "p_wilcoxon_two_sided": 0.8125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -5.4354,
+          7.7509
+        ],
+        "ci90_pp": [
+          -3.9047,
+          6.2202
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_shuffle.json",
+        "experiment": "Probe: genuine time-shuffle, en contrast",
+        "band": "bandrestrict_4k"
+      },
+      {
+        "label": "Probe: genuine time-shuffle, en contrast | lowpass_4k: none - instance",
+        "n": 5,
+        "paired": true,
+        "diff_mean_pp": 1.8224,
+        "sample_sd_diff_pp": 2.1474,
+        "se_diff_pp": 0.9604,
+        "df": 4,
+        "t_stat": 1.8976,
+        "p_ttest_two_sided": 0.130604,
+        "wilcoxon_stat": 1.0,
+        "p_wilcoxon_two_sided": 0.125,
+        "wilcoxon_method": "scipy exact",
+        "ci95_pp": [
+          -0.844,
+          4.4887
+        ],
+        "ci90_pp": [
+          -0.225,
+          3.8697
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "file": "results_cv_en_shuffle.json",
+        "experiment": "Probe: genuine time-shuffle, en contrast",
+        "band": "lowpass_4k"
+      }
+    ],
+    "architecture_cnn_vs_crnn": [
+      {
+        "label": "CRNN (results_cv_en.json) - CNN (results_cv_en_cnn.json), wideband_16k/none",
+        "n": 10,
+        "paired": false,
+        "diff_mean_pp": 0.0733,
+        "sample_sd_diff_pp": NaN,
+        "se_diff_pp": 0.906,
+        "df": 7.9944,
+        "t_stat": 0.0809,
+        "p_ttest_two_sided": 0.937475,
+        "wilcoxon_stat": null,
+        "p_wilcoxon_two_sided": null,
+        "wilcoxon_method": "not applicable (unpaired Welch comparison)",
+        "ci95_pp": [
+          -2.0162,
+          2.1629
+        ],
+        "ci90_pp": [
+          -1.6116,
+          1.7583
+        ],
+        "equivalence_margin_pp": 1.0,
+        "tost_established": false,
+        "n1": 5,
+        "n2": 5,
+        "sample_sd_a_pp": 1.4134,
+        "sample_sd_b_pp": 1.4514,
+        "file_a": "results_cv_en.json (CRNN)",
+        "file_b": "results_cv_en_cnn.json (CNN)",
+        "alignment_confirmed": false,
+        "alignment_note": "Fold-level alignment between the two runs could NOT be confirmed from committed data (separate build_cv_pair() calls; contrast side streamed from an HF mirror with no pinned revision or persisted file manifest). Reported as unpaired Welch t-test/CI, per brief instructions for the unconfirmed-alignment case."
+      }
+    ]
+  }
+}

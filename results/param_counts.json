@@ -1,0 +1,12 @@
+{
+  "CRNN_LID": {
+    "trainable_params": 1291329,
+    "fp32_size_mib": 4.926
+  },
+  "CNN_LID": {
+    "trainable_params": 101441,
+    "fp32_size_mib": 0.387
+  },
+  "ratio_crnn_over_cnn": 12.7299,
+  "note": "Trainable-parameter counts (requires_grad=True) from freshly instantiated, untrained model.py architectures -- no checkpoints loaded, no training performed."
+}
