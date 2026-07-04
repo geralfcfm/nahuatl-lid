@@ -111,6 +111,21 @@ def run(smoke: bool = False, rebuild: bool = False, experiment: str = "baseline"
         print(f"PHASE: done (cv_paired_seeds {contrast}) -> {res['meta']}", flush=True)
         return res["meta"]
 
+    if experiment == "cv_nested":
+        # Nested speaker-disjoint held-out TEST estimate (outer test disjoint; inner val
+        # for checkpoint only). Single config wideband_16k/none, CRNN. Scoped sanity check.
+        from experiments import cv_data
+        contrast_dir = None if contrast in cv_data.MIRROR_LANGS else f"/cv-{contrast}/{contrast}"
+        print(f"PHASE: cv_nested pair (nahuatl vs {contrast}, dir={contrast_dir})", flush=True)
+        raw, filenames = cv_data.build_cv_pair("/cv-ncx/ncx", contrast, contrast_dir=contrast_dir)
+        res = run_matrix.run_nested_cv(raw, filenames, "wideband_16k", "none",
+                                       device="cuda", epochs=epochs)
+        out_path = f"/outputs/results_cv_{contrast}_nested.json"
+        results_mod.write_results(res, out_path)
+        out_vol.commit()
+        print(f"PHASE: done (cv_nested {contrast}) -> {res['meta']}", flush=True)
+        return res["meta"]
+
     if experiment in ("shuffle", "degrade"):
         if not cache.is_cached(CACHE):
             raise RuntimeError("feature cache missing; run baseline first to populate lid-features")

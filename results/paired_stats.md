@@ -101,6 +101,15 @@ Sign convention: wideband − lowpass (pp lost by the 4 kHz low-pass); positive 
 - paired diff (CRNN-CNN) per seed (pp): [-0.7623, -0.3859, 0.0147] -> mean -0.3778 pp
 - Interpretation: this seed SD is run-to-run swing from training non-determinism ALONE (data + folds held fixed); the ~0.84 pp cross-run swing additionally reflects the unpinned CV draw.
 
+## (d-nested) Nested speaker-disjoint held-out TEST (en/es, wideband_16k/none, CRNN)
+
+Outer GroupKFold holds out disjoint TEST speakers; checkpoint chosen on an inner val split of the remaining speakers ONLY; scored on untouched outer-test speakers. Genuine generalisation estimate (vs single-split validation elsewhere).
+
+| Contrast | held-out test mean (%) | test SD (pp) | validation wb/none (%) | optimism gap (pp) | per-fold test (%) |
+|---|---:|---:|---:|---:|---|
+| en | 94.9142 | 2.4838 | 97.0296 | +2.1154 | [93.8447, 91.1334, 95.5789, 97.1415, 96.8727] |
+| es | 94.0934 | 3.0874 | 96.8830 | +2.7896 | [93.8447, 89.7411, 95.3346, 93.3301, 98.2165] |
+
 ## Per-config t-based 95% CI of the mean accuracy (all configs, all files)
 
 Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.

@@ -168,3 +168,61 @@ def run_paired_seeds(raw_items, filenames, band, norm, seeds, device="cpu", epoc
     meta = {"band": band, "norm": norm, "seeds": list(seeds), "k_folds": config.K_FOLDS,
             "epochs": epochs, "orig_seed": orig_seed}
     return {"meta": meta, "per_seed": per_seed, "fold_group_ids": fold_group_ids, "curves": curves}
+
+
+def run_nested_cv(raw_items, filenames, band, norm, device="cpu", epochs=config.EPOCHS,
+                  model_cls: type[nn.Module] = CRNN_LID, k_inner=4):
+    """Nested, speaker-disjoint held-out TEST estimate for ONE (band, norm) config.
+
+    Outer GroupKFold(K_FOLDS) holds out disjoint speakers as a TEST set. Within each
+    outer-train split, an inner GroupKFold provides a validation split used ONLY for
+    checkpoint (best-epoch) selection; the checkpointed model is then scored on the
+    untouched outer-TEST speakers. The test speakers never influence the checkpoint,
+    band, norm, threshold, or any other choice, so this is a genuine generalisation
+    estimate -- unlike the single-split cross-validation *validation* accuracy reported
+    elsewhere, where the checkpoint is chosen on the same fold that is then scored.
+
+    Returns per-outer-fold test accuracy + the mean over outer folds. Single config,
+    single seed, reported as a scoped sanity check (see the thesis limitation note).
+    """
+    from experiments.preprocess import features_for_band
+    items = features_for_band(raw_items, band)
+    groups = np.array([group_id(f) for f in filenames])
+    outer = grouped_folds(filenames, config.K_FOLDS)
+    test_accs, fold_group_ids = [], []
+    for oi, (otr, ote) in enumerate(outer, start=1):
+        config.seed_everything(config.SEED)
+        otr_names = [filenames[j] for j in otr]
+        inner = grouped_folds(otr_names, k_inner)
+        itr_local, iva_local = inner[0]  # first inner fold: indices INTO otr_names
+        itr = [int(otr[k]) for k in itr_local]
+        iva = [int(otr[k]) for k in iva_local]
+        tr_items = [(items[j][0], items[j][1]) for j in itr]
+        va_items = [(items[j][0], items[j][1]) for j in iva]
+        te_items = [(items[j][0], items[j][1]) for j in ote]
+        # sanity: outer-test speakers disjoint from everything used for training/checkpoint
+        assert set(groups[ote].tolist()).isdisjoint(set(groups[itr].tolist()) | set(groups[iva].tolist())), \
+            "nested-CV leakage: test speakers overlap train/val"
+        h = train.train_fold(tr_items, va_items, norm, device=device, epochs=epochs,
+                             label=f"nested o{oi}/{band}/{norm}", model_cls=model_cls)
+        m = model_cls().to(device)
+        m.load_state_dict(h["best_state"])
+        m.eval()
+        dl = DataLoader(SpecDataset(te_items, norm), batch_size=config.BATCH_SIZE, shuffle=False)
+        correct, total = 0, 0
+        with torch.no_grad():
+            for x, y in dl:
+                x, y = x.to(device), y.to(device).unsqueeze(1)
+                out = m(x)
+                correct += ((out > 0).float() == y).sum().item()
+                total += y.size(0)
+        acc = correct / max(total, 1)
+        test_accs.append(acc)
+        fold_group_ids.append(sorted(set(groups[ote].tolist())))
+        print(f"[nested o{oi}] test_acc={acc:.4f} (test groups={len(fold_group_ids[-1])})", flush=True)
+    mean = sum(test_accs) / len(test_accs)
+    print(f"[nested {band}/{norm}] DONE test_mean={mean:.4f}", flush=True)
+    meta = {"band": band, "norm": norm, "seed": config.SEED, "k_outer": config.K_FOLDS,
+            "k_inner": k_inner, "epochs": epochs,
+            "protocol": "nested-CV: outer speaker-disjoint TEST, inner GroupKFold val for checkpoint only"}
+    return {"meta": meta, "test_accs": test_accs, "fold_group_ids": fold_group_ids}

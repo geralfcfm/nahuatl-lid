@@ -2020,6 +2020,42 @@
         ],
         "paired_diff_mean_pp": -0.3778
       }
+    ],
+    "nested_heldout_test": [
+      {
+        "file": "results_cv_en_nested.json",
+        "contrast": "en",
+        "test_accs_pct": [
+          93.8447,
+          91.1334,
+          95.5789,
+          97.1415,
+          96.8727
+        ],
+        "test_mean_pct": 94.9142,
+        "test_sd_pp": 2.4838,
+        "validation_wbnone_pct": 97.0296,
+        "optimism_gap_pp": 2.1154,
+        "k_outer": 5,
+        "k_inner": 4
+      },
+      {
+        "file": "results_cv_es_nested.json",
+        "contrast": "es",
+        "test_accs_pct": [
+          93.8447,
+          89.7411,
+          95.3346,
+          93.3301,
+          98.2165
+        ],
+        "test_mean_pct": 94.0934,
+        "test_sd_pp": 3.0874,
+        "validation_wbnone_pct": 96.883,
+        "optimism_gap_pp": 2.7896,
+        "k_outer": 5,
+        "k_inner": 4
+      }
     ]
   }
 }

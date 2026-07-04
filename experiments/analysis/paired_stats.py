@@ -277,6 +277,41 @@ def build_architecture_seeds() -> list[dict]:
     }]
 
 
+NESTED_FILES = [("results_cv_en_nested.json", "en"), ("results_cv_es_nested.json", "es")]
+
+
+def build_nested_test() -> list[dict]:
+    """(d-nested) Nested speaker-disjoint held-out TEST accuracy (run_nested_cv) for
+    en/es, with the optimism gap vs the single-split validation accuracy. Returns []
+    if the nested files are absent."""
+    out = []
+    for fname, tag in NESTED_FILES:
+        path = RESULTS_DIR / fname
+        if not path.exists():
+            continue
+        with open(path) as f:
+            d = json.load(f)
+        ta = [a * 100.0 for a in d["test_accs"]]
+        mean = sum(ta) / len(ta)
+        vm = None
+        try:
+            vd = load(f"results_cv_{tag}.json")
+            for c in vd["configs"]:
+                if c["band"] == "wideband_16k" and c["norm"] == "none":
+                    vm = c["mean_acc"] * 100.0
+        except FileNotFoundError:
+            pass
+        out.append({
+            "file": fname, "contrast": tag,
+            "test_accs_pct": [round(x, 4) for x in ta],
+            "test_mean_pct": round(mean, 4), "test_sd_pp": round(sample_sd(ta), 4),
+            "validation_wbnone_pct": round(vm, 4) if vm is not None else None,
+            "optimism_gap_pp": round(vm - mean, 4) if vm is not None else None,
+            "k_outer": d["meta"]["k_outer"], "k_inner": d["meta"]["k_inner"],
+        })
+    return out
+
+
 def main() -> None:
     per_config_ci = build_per_config_ci()
     baseline = build_baseline_config_invariance()
@@ -285,6 +320,7 @@ def main() -> None:
     architecture = build_architecture()
     architecture_paired = build_architecture_paired()
     architecture_seeds = build_architecture_seeds()
+    nested_test = build_nested_test()
 
     out = {
         "meta": {
@@ -322,6 +358,7 @@ def main() -> None:
             "architecture_cnn_vs_crnn": architecture,
             "architecture_cnn_vs_crnn_paired": architecture_paired,
             "architecture_cnn_vs_crnn_seeds": architecture_seeds,
+            "nested_heldout_test": nested_test,
         },
     }
 
@@ -427,6 +464,16 @@ def write_markdown(out: dict) -> None:
             lines.append(f"- paired diff (CRNN-CNN) per seed (pp): {r['paired_diff_means_pp']} -> mean {r['paired_diff_mean_pp']:.4f} pp")
             lines.append("- Interpretation: this seed SD is run-to-run swing from training non-determinism ALONE "
                          "(data + folds held fixed); the ~0.84 pp cross-run swing additionally reflects the unpinned CV draw.")
+
+    nested = out["comparisons"].get("nested_heldout_test", [])
+    if nested:
+        lines.append("\n## (d-nested) Nested speaker-disjoint held-out TEST (en/es, wideband_16k/none, CRNN)\n")
+        lines.append("Outer GroupKFold holds out disjoint TEST speakers; checkpoint chosen on an inner val split of the remaining speakers ONLY; scored on untouched outer-test speakers. Genuine generalisation estimate (vs single-split validation elsewhere).\n")
+        lines.append("| Contrast | held-out test mean (%) | test SD (pp) | validation wb/none (%) | optimism gap (pp) | per-fold test (%) |")
+        lines.append("|---|---:|---:|---:|---:|---|")
+        for r in nested:
+            lines.append(f"| {r['contrast']} | {r['test_mean_pct']:.4f} | {r['test_sd_pp']:.4f} | "
+                         f"{r['validation_wbnone_pct']:.4f} | {r['optimism_gap_pp']:+.4f} | {r['test_accs_pct']} |")
 
     lines.append("\n## Per-config t-based 95% CI of the mean accuracy (all configs, all files)\n")
     lines.append("Replaces population-SD-only language; CI computed as mean ± t₀.₉₇₅(4)·(sample SD)/√5.\n")
