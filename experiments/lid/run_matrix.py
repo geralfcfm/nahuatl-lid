@@ -38,6 +38,13 @@ def _finalize(summaries, oof_by_config, epochs):
     best_confusion = evaluate.confusion_and_metrics(bl, bp)
     meta = {"seed": config.SEED, "k_folds": config.K_FOLDS, "epochs": epochs,
             "best_config": {"band": best["band"], "norm": best["norm"]}}
+    # Also emit the canonical wideband_16k/none confusion. The thesis quotes the
+    # shuffle/normal accuracies at wideband_16k/none for every contrast, which is NOT
+    # always the best config (e.g. the Raramuri time-shuffle best config is
+    # lowpass_4k/instance), so best_confusion alone can misrepresent the quoted number.
+    if ("wideband_16k", "none") in oof_by_config:
+        wl, wp = oof_by_config[("wideband_16k", "none")]
+        meta["wbnone_confusion"] = evaluate.confusion_and_metrics(wl, wp)
     return results.build_results(summaries, best_confusion, meta)
 
 

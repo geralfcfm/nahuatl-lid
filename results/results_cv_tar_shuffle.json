@@ -6,6 +6,16 @@
     "best_config": {
       "band": "lowpass_4k",
       "norm": "instance"
+    },
+    "wbnone_confusion": {
+      "tp": 8173,
+      "fn": 1146,
+      "fp": 736,
+      "tn": 8583,
+      "precision": 0.917386912111348,
+      "recall": 0.8770254319132954,
+      "f1": 0.8967522492868115,
+      "accuracy": 0.8990235003755768
     }
   },
   "configs": [
